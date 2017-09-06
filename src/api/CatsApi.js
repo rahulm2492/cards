@@ -1,12 +1,12 @@
 class CatsApi {
 
   static requestHeaders() {
-    return {'AUTHORIZATION': `Bearer ${sessionStorage.jwt}`}
+    return {'x-access-token': sessionStorage.getItem('jwt')}
   }
 
   static getAllCats() {
     const headers = this.requestHeaders();
-    const request = new Request(`${process.env.API_HOST}/api/v1/cats`, {
+    const request = new Request(`${process.env.API_HOST}/api/users`, {
       method: 'GET',
       headers: headers
     });

@@ -11,7 +11,19 @@ export function loginUser(credentials) {
   return function(dispatch) {
     return sessionApi.login(credentials).then(response => {
       debugger
-      sessionStorage.setItem('jwt', response.jwt);
+      sessionStorage.setItem('jwt', response.token);
+      dispatch(loginSuccess());
+    }).catch(error => {
+      debugger;
+      throw(error);
+    });
+  };
+}
+
+export function signUpUser(credentials) {
+  return function(dispatch) {
+    return sessionApi.signUp(credentials).then(response => {
+      debugger
       dispatch(loginSuccess());
     }).catch(error => {
       debugger;

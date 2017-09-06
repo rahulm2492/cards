@@ -1,50 +1,42 @@
-import express from 'express';
-import webpack from 'webpack';
-import path from 'path';
-import config from '../webpack.config.dev';
-import open from 'open';
-import favicon from 'serve-favicon';
-let bodyParser  = require('body-parser');
-let mongoose    = require('mongoose');
-let jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
-let mongoConfig = require('./config'); // get our config file
-let User   = require('./userModal'); // get our mongoose model
-mongoose.connect(mongoConfig.database); // connect to database
+var express     = require('express');
+var app         = express();
+var bodyParser  = require('body-parser');
+var mongoose    = require('mongoose');
 
-/* eslint-disable no-console */
-/* eslint-disable  no-undef */
+var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
+var config = require('./config'); // get our config file
+var User   = require('./userModal'); // get our mongoose model
 
-
-
-const port = 5000;
-const app = express();
-const compiler = webpack(config);
-app.set('superSecret', mongoConfig.secret); // secret variable
+// =======================
+// configuration =========
+// =======================
+var port = process.env.PORT || 8080; // used to create, sign, and verify tokens
+mongoose.connect(config.database); // connect to database
+app.set('superSecret', config.secret); // secret variable
 
 // use body parser so we can get info from POST and/or URL parameters
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(require('webpack-dev-middleware')(compiler, {
-  noInfo: true,
-  publicPath: config.output.publicPath
-}));
-app.use(express.static(path.join(__dirname, '../src')));
-app.use(require('webpack-hot-middleware')(compiler));
-app.use(favicon(path.join(__dirname,'assets','public','favicon.ico')));
 
-// app.get('*', function(req, res) {
-//   res.sendFile(path.join( __dirname, '../src/index.html'));
-// });
 
-app.post('/signUp', function(req, res, next) {
+
+// =======================
+// routes ================
+// =======================
+// basic route
+app.get('/', function(req, res) {
+    res.send('Hello! The API is at http://localhost:' + port + '/api');
+});
+app.get('/setup', function(req, res) {
 
   // create a sample user
   var userData = { 
-    email: req.body.auth.email,
-    password: req.body.auth.password
+    email: 'mail@',
+    username: 'rahultest',
+    password: 'pwd',
+    passwordConf: 'pwd',
   };
-  
-  console.log(userData);
+
   // save the sample user
   User.create(userData, function (err, user) {
     if (err) {
@@ -68,10 +60,10 @@ var apiRoutes = express.Router();
 
 
 apiRoutes.post('/authenticate', function(req, res) {
-   console.log(req)
+
   // find the user
   User.findOne({
-    email: req.body.auth.email
+    email: req.body.email
   }, function(err, user) {
 
     if (err) throw err;
@@ -81,7 +73,7 @@ apiRoutes.post('/authenticate', function(req, res) {
     } else if (user) {
 
       // check if password matches
-      if (user.password != req.body.auth.password) {
+      if (user.password != req.body.password) {
         res.json({ success: false, message: 'Authentication failed. Wrong password.' });
       } else {
 
@@ -152,11 +144,5 @@ app.use('/api', apiRoutes);
 // =======================
 // start the server ======
 // =======================
-
-app.listen(port, function(err) {
-  if (err) {
-    console.log(err);
-  } else {
-    open(`http://localhost:${port}`);
-  }
-});
+app.listen(port);
+console.log('Magic happens at http://localhost:' + port);

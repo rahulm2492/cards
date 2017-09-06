@@ -7,9 +7,10 @@ import * as sessionActions from '../actions/sessionActions';
 class LogInPage extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {credentials: {email: 'sophie@email.com', password: 'password'}}
+    this.state = {credentials: {email: 'mailsave', password: 'pwd123'}}
     this.onChange = this.onChange.bind(this);
     this.onSave = this.onSave.bind(this);
+    this.signUp = this.signUp.bind(this);
   }
 
   onChange(event) {
@@ -21,7 +22,11 @@ class LogInPage extends React.Component {
 
   onSave(event) {
     event.preventDefault();
-    this.props.actions.loginUser(this.state.credentials);
+    this.props.login.loginUser(this.state.credentials);
+  }
+  signUp(event) {
+    event.preventDefault();
+    this.props.login.signUpUser(this.state.credentials);
   }
 
   render() {
@@ -45,6 +50,7 @@ class LogInPage extends React.Component {
             type="submit"
             className="btn btn-primary"
             onClick={this.onSave}/>
+            <button  className="btn btn-primary" onClick = {this.signUp} > Sign Up </button>
             {" "}
         </form>
       </div>
@@ -54,7 +60,7 @@ class LogInPage extends React.Component {
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators(sessionActions, dispatch)
+    login: bindActionCreators(sessionActions, dispatch)
   };
 }
 export default connect(null, mapDispatchToProps)(LogInPage);

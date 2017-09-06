@@ -22,11 +22,9 @@ class Header extends React.Component {
         <nav>
           <IndexLink to="/" activeClassName="active">Home</IndexLink>
           {" | "}
-          <Link to="/cats" activeClassName="active">Cats</Link>
-          {" | "}
           <Link to="/about" activeClassName="active">About</Link>
           {" | "}
-          <a href="/logout" onClick={this.logOut}>log out</a>
+          <a href="/logout" onClick={this.logOut}>Log Out</a>
         </nav>
       );
     } else {
@@ -34,11 +32,9 @@ class Header extends React.Component {
         <nav>
           <IndexLink to="/" activeClassName="active">Home</IndexLink>
           {" | "}
-          <Link to="/cats" activeClassName="active">Cats</Link>
-          {" | "}
           <Link to="/about" activeClassName="active">About</Link>
           {" | "}
-          <Link to="/login" activeClassName="active">log in</Link>
+          <Link to="/login" activeClassName="active">Log In</Link>
         </nav>
       );
     }
